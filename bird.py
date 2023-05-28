@@ -15,7 +15,7 @@ class Bird:
         self.image = pg.image.load("./images/bird.png").convert_alpha()
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        self.rect = pg.Rect(self.x + 5, self.y + 5, self.width - 10, self.height - 10)
 
     def handle_events(self, event):
         if event.type == pg.KEYDOWN:
@@ -48,7 +48,7 @@ class Bird:
         if self.check_score(goal):
             self.update_score()
         self.apply_force(GRAVITY, dt)
-        self.rect.y = self.y
+        self.rect.y = self.y + 5
 
     def draw(self):
         SCREEN.blit(self.image, (self.x, self.y))
@@ -63,4 +63,3 @@ class Bird:
     def display_score(self):
         text_render = font.render(str(self.score), True, WHITE)
         SCREEN.blit(text_render, (HALF_WIDTH - 16, 30))
-
