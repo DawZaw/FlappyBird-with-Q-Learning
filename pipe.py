@@ -5,10 +5,10 @@ from settings import *
 
 class Pipe:
     def __init__(self):
-        self.top_img = pg.image.load("./images/top_pipe.png").convert_alpha()
         self.bot_img = pg.image.load("./images/bottom_pipe.png").convert_alpha()
-        self.width = self.top_img.get_width()
+        self.top_img = pg.image.load("./images/top_pipe.png").convert_alpha()
         self.height = self.top_img.get_height()
+        self.width = self.top_img.get_width()
         self.spacing = 150
         self.y = randint(100, 250)
         self.x = WIDTH
@@ -16,6 +16,7 @@ class Pipe:
         self.goal = self.x + self.width
         self.top_rect = pg.Rect(self.x, self.y - self.height, self.width, self.height)
         self.bot_rect = pg.Rect(self.x, self.y + self.spacing, self.width, self.height)
+        self.pipes = [self.bot_rect, self.top_rect]
 
     def update(self, bird, dt):
         if bird.alive:

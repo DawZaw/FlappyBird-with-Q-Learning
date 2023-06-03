@@ -4,7 +4,10 @@ from settings import *
 
 
 class Bird:
-    def __init__(self, qlearn, states={}):
+    def __init__(self, brain):
+        self.image = pg.image.load("./images/bird.png").convert_alpha()
+        self.height = self.image.get_height()
+        self.width = self.image.get_width()
         self.x = 50
         self.y = HALF_HEIGHT
         self.alive = True
@@ -12,22 +15,11 @@ class Bird:
         self.acc = 0
         self.max_vel = 80
         self.jump = 10
-        self.image = pg.image.load("./images/bird.png").convert_alpha()
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
         self.rect = pg.Rect(self.x + 5, self.y + 5, self.width - 10, self.height - 10)
+
         self.score = 0
-
-        self.state = (22, 13, 0)
-        self.reward = 0
-        self.brain = qlearn
-
-    def handle_events(self, event):
-        if event.type == pg.KEYDOWN:
-            if self.alive and event.key == pg.K_SPACE:
-                self.flap()
-            if event.key == pg.K_s:
-                print(self.states)
+        self.state = (12, 13, 0)
+        self.brain = brain
 
     def flap(self):
         self.acc = 0
@@ -50,32 +42,31 @@ class Bird:
     def check_collision(self, pipes):
         return True if self.rect.collidelistall(pipes) else False
 
-    def update(self, pipes, goal, dt):
-        reward = 15
-        if self.check_edges():
-            reward = -1000
+    def update(self, pipe, dt):
+        failed = False
+        if self.check_edges() or self.check_collision(pipe.pipes):
+            failed = True
             self.alive = False
-        if self.check_collision(pipes):
-            reward = -1000
-            self.alive = False
-        if self.check_score(goal):
-            reward = 200
+        if self.check_score(pipe.goal):
             self.update_score()
         self.apply_force(GRAVITY, dt)
         self.rect.y = self.y + 5
-        self.update_brain(reward, pipes)
+        if failed:
+            self.update_brain(self.brain.punish, pipe.pipes)
+        else:
+            self.update_brain(self.brain.reward, pipe.pipes)
 
     def update_brain(self, reward, pipes):
         prv_state = self.state
         x_state = min(WIDTH, pipes[0].x)
-        x_state = math.floor(x_state / 20)
+        x_state = math.floor(x_state / 40) + 2
         y_delta = pipes[0].y - self.y
         if y_delta < 0:
             y_delta = int(abs(y_delta) + HEIGHT * 0.8)
-        y_state = math.floor(y_delta / 20)
+        y_state = math.floor(y_delta / 40)
         action = self.brain.select_action(self.state)
         self.state = (x_state, y_state, action)
-        self.brain.updateQ(prv_state, self.state, action, reward)
+        self.brain.updateQ(prv_state, self.state, reward)
         if action == 1:
             self.flap()
 
@@ -93,13 +84,3 @@ class Bird:
         score_text = f"Score: {self.score}"
         text_render = font.render(score_text, True, WHITE)
         SCREEN.blit(text_render, (WIDTH - 110, 15))
-
-    def index_states(self):
-        states = {}
-        counter = 0
-        for x in range(-2, 23):
-            for y in range(26):
-                states[(x, y)] = counter
-                counter += 1
-                print(x, y)
-        return states

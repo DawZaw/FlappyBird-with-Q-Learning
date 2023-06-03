@@ -10,26 +10,23 @@ from settings import *
 
 class Game:
     def __init__(self):
-        self.qlearn = QLearn(650, 2)
+        self.qlearn = QLearn()
         self.background = Background()
         self.bird = Bird(self.qlearn)
         self.pipe = Pipe()
         self.high_score = 0
         self.generation = 0
-        self.pipes = []
 
     def handle_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit(0)
-            self.bird.handle_events(event)
 
     def update(self, dt):
-        self.pipes = [self.pipe.bot_rect, self.pipe.top_rect]
         self.background.update(self.bird, dt)
         self.pipe.update(self.bird, dt)
-        self.bird.update(self.pipes, self.pipe.goal, dt)
+        self.bird.update(self.pipe, dt)
         if not self.bird.alive:
             self.generation += 1
             if self.bird.score > self.high_score:
@@ -44,10 +41,8 @@ class Game:
         pg.display.flip()
 
     def new_game(self):
-        # self.background = Background()
         self.bird = Bird(self.qlearn)
         self.pipe = Pipe()
-        # self.pipes = []
 
     def display_text(self):
         gen_text = f"Generation: {self.generation}"

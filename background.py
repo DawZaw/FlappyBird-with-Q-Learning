@@ -8,7 +8,7 @@ class Background:
         self.img = pg.image.load("./images/background.png")
         self.width = self.img.get_width()
         self.rect = self.img.get_rect()
-        self.speed = 15
+        self.speed = 5
         self.scroll = 0
         self.panels = 2
 
