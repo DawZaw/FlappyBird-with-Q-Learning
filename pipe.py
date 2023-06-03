@@ -10,7 +10,7 @@ class Pipe:
         self.height = self.top_img.get_height()
         self.width = self.top_img.get_width()
         self.spacing = 150
-        self.y = randint(100, 250)
+        self.y = 100 + 25 * randint(0, 6)
         self.x = WIDTH
         self.speed = 20
         self.goal = self.x + self.width
@@ -28,7 +28,7 @@ class Pipe:
             self.bot_rect.x = self.x
 
     def reset(self):
-        self.y = randint(100, 250)
+        self.y = 100 + 25 * randint(0, 6)
         self.top_rect.y = self.y - self.height
         self.bot_rect.y = self.y + self.spacing
         self.x = WIDTH
