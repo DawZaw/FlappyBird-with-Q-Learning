@@ -18,7 +18,7 @@ class Bird:
         self.rect = pg.Rect(self.x + 5, self.y + 5, self.width - 10, self.height - 10)
 
         self.score = 0
-        self.state = (12, 13, 0)
+        self.state = (12, 8, 0)
         self.brain = brain
 
     def flap(self):
@@ -81,6 +81,9 @@ class Bird:
         self.score += 1
 
     def display_score(self):
+        spacing = 100
+        if self.score > 0:
+            spacing = 100 + math.floor(math.log10(self.score)) * 13
         score_text = f"Score: {self.score}"
         text_render = font.render(score_text, True, WHITE)
-        SCREEN.blit(text_render, (WIDTH - 110, 15))
+        SCREEN.blit(text_render, (WIDTH - spacing, 15))
