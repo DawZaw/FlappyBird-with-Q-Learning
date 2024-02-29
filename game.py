@@ -1,4 +1,5 @@
 import sys
+import math
 import pygame as pg
 from bird import Bird
 from pipe import Pipe
@@ -47,7 +48,10 @@ class Game:
     def display_text(self):
         gen_text = f"Generation: {self.generation}"
         hs_text = f"Highscore: {self.high_score}"
+        score_text = f"Score: {self.bird.score}"
         text_render = font.render(gen_text, True, WHITE)
         SCREEN.blit(text_render, (15, 15))
         text_render = font.render(hs_text, True, WHITE)
         SCREEN.blit(text_render, (15, 40))
+        text_render = font.render(score_text, True, WHITE)
+        SCREEN.blit(text_render, (WIDTH - 100, 15))

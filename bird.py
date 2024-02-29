@@ -9,7 +9,7 @@ class Bird:
         self.height = self.image.get_height()
         self.width = self.image.get_width()
         self.x = 50
-        self.y = HALF_HEIGHT
+        self.y = 50
         self.alive = True
         self.vel = 0
         self.acc = 0
@@ -72,18 +72,10 @@ class Bird:
 
     def draw(self):
         SCREEN.blit(self.image, (self.x, self.y))
-        self.display_score()
 
     def check_score(self, goal):
         return abs(self.x - goal) < 1
 
     def update_score(self):
         self.score += 1
-
-    def display_score(self):
-        spacing = 100
-        if self.score > 0:
-            spacing = 100 + math.floor(math.log10(self.score)) * 13
-        score_text = f"Score: {self.score}"
-        text_render = font.render(score_text, True, WHITE)
-        SCREEN.blit(text_render, (WIDTH - spacing, 15))
+        
