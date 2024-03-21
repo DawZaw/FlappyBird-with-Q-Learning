@@ -43,18 +43,14 @@ class Bird:
         return True if self.rect.collidelistall(pipes) else False
 
     def update(self, pipe, dt):
-        failed = False
         if self.check_edges() or self.check_collision(pipe.pipes):
-            failed = True
+            self.update_brain(self.brain.punish, pipe.pipes)
             self.alive = False
         if self.check_score(pipe.goal):
             self.update_score()
         self.apply_force(GRAVITY, dt)
         self.rect.y = self.y + 5
-        if failed:
-            self.update_brain(self.brain.punish, pipe.pipes)
-        else:
-            self.update_brain(self.brain.reward, pipe.pipes)
+        self.update_brain(self.brain.reward, pipe.pipes)
 
     def update_brain(self, reward, pipes):
         prv_state = self.state
