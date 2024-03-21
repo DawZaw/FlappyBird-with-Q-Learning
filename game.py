@@ -1,5 +1,4 @@
 import sys
-import math
 import pygame as pg
 from bird import Bird
 from pipe import Pipe
